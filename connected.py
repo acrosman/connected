@@ -31,13 +31,13 @@ def ping(host):
         return response[1]
 
     if tokens[0].decode("utf-8") == 'PING':
-        try:
-            ms = tokens[12].decode("utf-8").split('=')[1]
-            return ms
-        except Exception:
-            return 'down'
+        for t in tokens:
+            sample = t.decode('utf-8')
+            if sample[:5] == 'time=':
+                ms = sample.split('=')[1]
+                return ms
 
-    return tokens
+    return 'down'
 
 
 if __name__ == '__main__':
@@ -45,4 +45,4 @@ if __name__ == '__main__':
         while 1:
             outputFile.write("{0}\t{1}\n".format(time.asctime(),
                              ping('www.google.com')).encode("utf-8"))
-            time.sleep(10)
+            time.sleep(5)
